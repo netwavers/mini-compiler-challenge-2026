@@ -1,3 +1,4 @@
+// 🐾 たぬきちゃんによる自動ジャッジ本番テスト稼働確認用トリガーコメント
 import { Token, ASTNode } from '../common/types';
 
 export class TanukiParserGenerator {
