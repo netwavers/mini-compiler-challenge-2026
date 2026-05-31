@@ -149,6 +149,9 @@
             <a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1" href="#">Dashboard</a>
             <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="https://github.com/netwavers/mini-compiler-challenge-2026/commits/main" target="_blank">Submissions</a>
             <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="https://github.com/netwavers/mini-compiler-challenge-2026/blob/main/README.md" target="_blank">Docs</a>
+            <button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" onclick="openBenefitsModal()">
+                <span class="material-symbols-outlined text-[14px]">military_tech</span>🚀 Benefits
+            </button>
         </div>
         <div class="flex items-center gap-4">
             <button class="material-symbols-outlined text-primary p-2 hover:bg-glass-surface rounded transition-all active:scale-95">notifications</button>
@@ -172,11 +175,15 @@
                     </div>
                 </div>
             </div>
-            <nav class="space-y-1 flex-1">
+            <nav class="space-y-2 flex-1">
                 <a class="flex items-center gap-3 px-4 py-3 rounded bg-secondary-container text-on-secondary-container font-bold border-l-4 border-secondary transition-all active:translate-x-1" href="#">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
                     <span class="font-label-caps text-label-caps">Global Rank</span>
                 </a>
+                <button class="w-full flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-primary hover:bg-glass-surface font-bold border-l-4 border-transparent transition-all active:translate-x-1" onclick="openBenefitsModal()">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+                    <span class="font-label-caps text-label-caps">🚀 Benefits</span>
+                </button>
             </nav>
             <div class="mt-auto space-y-4">
                 <div class="border-t border-outline-variant pt-4 space-y-2">
@@ -264,6 +271,10 @@
             <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
             <span class="font-label-caps text-[10px]">Rank</span>
         </a>
+        <button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-transform" onclick="openBenefitsModal()">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+            <span class="font-label-caps text-[10px]">🚀 Benefits</span>
+        </button>
     </div>
 </nav>
 
@@ -313,6 +324,99 @@
         </div>
         <div class="p-4 bg-glass-surface border-t border-outline-variant flex justify-end">
             <button class="bg-primary text-on-primary px-6 py-2 font-label-caps text-label-caps font-bold active:scale-95 transition-all" onclick="closeModal()">DISMISS</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Benefits/Perks -->
+<div class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4" id="benefits-modal">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeBenefitsModal()"></div>
+    <div class="relative glass-panel max-w-3xl w-full rounded border-2 border-secondary glow-orange overflow-hidden flex flex-col max-h-[85vh] transform transition-all duration-300">
+        <div class="bg-secondary/10 border-b border-secondary/30 p-4 flex justify-between items-center shrink-0">
+            <h3 class="font-headline-lg text-headline-lg text-secondary uppercase text-lg md:text-xl flex items-center gap-2">
+                <span class="material-symbols-outlined animate-pulse text-secondary">military_tech</span>
+                MISSION_REWARDS :: 得られる技術的恩恵とアドバンテージ
+            </h3>
+            <button class="material-symbols-outlined text-secondary hover:bg-secondary/20 rounded-full p-1" onclick="closeBenefitsModal()">close</button>
+        </div>
+        <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm md:text-base">
+            <!-- キャッチコピー -->
+            <div class="bg-secondary/5 border-l-4 border-secondary p-4 rounded glow-orange">
+                <h4 class="font-bold text-secondary text-base mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-lg">rocket_launch</span>
+                    本コンテストであなたが手に入れる「一生物の戦闘力」
+                </h4>
+                <p class="opacity-80 text-xs md:text-sm leading-relaxed">
+                    当コンテストは、賞金やトロフィーといった一時的な報酬は一切ありません。その代わり、<strong class="text-secondary font-bold">「完走したとき、あなたのエンジニアとしての視座が一段引き上がる」</strong>という、最高難度の技術的資産を提供します。
+                </p>
+            </div>
+
+            <!-- 4つのレイヤー -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- 1. 魔法の制御 -->
+                <div class="glass-panel p-4 border border-outline-variant hover:border-secondary transition-all rounded">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-secondary">auto_awesome</span>
+                        <h5 class="font-bold text-primary text-sm">1. 魔法（言語処理系）を自力で制御する自信</h5>
+                    </div>
+                    <p class="text-xs opacity-75 leading-relaxed">
+                        多くのエンジニアにとって、コンパイラ、インタプリタ、最新LLMのトークナイザー等はブラックボックス（魔法）です。EBNFからパーサーを動的生成するロジックを組むことで、「言語が解析される仕組み」を完璧に脳内モデル化でき、新規言語の習得速度が尋常でなく向上します。
+                    </p>
+                </div>
+
+                <!-- 2. 実用のスキル -->
+                <div class="glass-panel p-4 border border-outline-variant hover:border-secondary transition-all rounded">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-secondary">terminal</span>
+                        <h5 class="font-bold text-primary text-sm">2. 今後の実務で即戦力になる4大スキル</h5>
+                    </div>
+                    <p class="text-xs opacity-75 leading-relaxed font-sans">
+                        <strong class="text-secondary">① 独自DSL構築</strong>: 社内ツール等の簡易言語自作<br>
+                        <strong class="text-secondary">② ログ・ネスト解析</strong>: 複雑な入れ子テキストの堅牢パース<br>
+                        <strong class="text-secondary">③ LLM文法駆動</strong>: 出力を100%制御する構造化出力（Structured Outputs）の完全理解<br>
+                        <strong class="text-secondary">④ メタプロ</strong>: 自動生成による抽象設計思考
+                    </p>
+                </div>
+
+                <!-- 3. CSの基礎 -->
+                <div class="glass-panel p-4 border border-outline-variant hover:border-secondary transition-all rounded">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-secondary">schema</span>
+                        <h5 class="font-bold text-primary text-sm">3. 計算機科学（CS）のアルゴリズム思考</h5>
+                    </div>
+                    <p class="text-xs opacity-75 leading-relaxed">
+                        フレームワークの使い方に終始する開発から脱却し、決定論的有限オートマトン（DFA）、抽象構文木（AST）構築、再帰アルゴリズムのスタック管理など、「データ構造とアルゴリズム」の真髄を、コンテストの熱量の中で強制的に血肉化できます。
+                    </p>
+                </div>
+
+                <!-- 4. ポートフォリオ -->
+                <div class="glass-panel p-4 border border-outline-variant hover:border-secondary transition-all rounded">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-secondary">folder_shared</span>
+                        <h5 class="font-bold text-primary text-sm">4. 最強の技術ポートフォリオ</h5>
+                    </div>
+                    <p class="text-xs opacity-75 leading-relaxed">
+                        「Webアプリを作りました」というありきたりな成果物とは一線を画すため、エンジニア採用面接や技術コミュニティで「私は車輪の再発明（言語処理系の自作）ができるほど、論理的設計とアーキテクチャに深い洞察があります」という最高峰 of 証明になります。
+                    </p>
+                </div>
+            </div>
+
+            <!-- キャッチコピー詳細（募集要項） -->
+            <div class="bg-glass-surface border border-outline-variant p-4 rounded text-xs space-y-2">
+                <div class="font-bold text-primary">🚀 本コンテストであなたが手に入れる具体的な戦闘力:</div>
+                <ul class="list-disc pl-4 space-y-1 opacity-80">
+                    <li><strong class="text-secondary">「正規表現の限界」を突破する:</strong> ネストした構造や複雑な文法をバグなくエレガントにパースする「真のテキスト解析力」が身につきます。</li>
+                    <li><strong class="text-secondary">LLMスタックの裏側を知る:</strong> AIに厳密な出力を強制する構造化テクニックの基盤（BNF/EBNF）を体系的に理解できます。</li>
+                    <li><strong class="text-secondary">ブラックボックスを破壊する:</strong> 言語処理系という「魔法」をあなたの手でコントロールする自信と実績（GitHubリポジトリ）が手に入ります。</li>
+                </ul>
+            </div>
+            
+            <div class="text-center font-code-sm text-[11px] opacity-40 italic py-2 border-t border-outline-variant shrink-0 select-none">
+                "さあご主人様、次なる魔法の準備は整っておりますわ！指示をどうぞ！🐾"
+            </div>
+        </div>
+        <div class="p-4 bg-glass-surface border-t border-outline-variant flex justify-end shrink-0">
+            <button class="bg-secondary text-on-secondary px-6 py-2 font-label-caps text-label-caps font-bold active:scale-95 transition-all" onclick="closeBenefitsModal()">DISMISS_MISSION</button>
         </div>
     </div>
 </div>
@@ -592,6 +696,18 @@
     function triggerManualReload() {
         fetchLeaderboard();
         showToast("Notification: Ledger cache reloaded manually.");
+    }
+
+    function openBenefitsModal() {
+        document.getElementById('benefits-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeBenefitsModal() {
+        document.getElementById('benefits-modal').classList.add('hidden');
+        if (document.getElementById('review-modal').classList.contains('hidden')) {
+            document.body.style.overflow = 'auto';
+        }
     }
 
     // Initial Load
