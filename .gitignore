@@ -1,0 +1,4 @@
+node_modules/
+dist/
+review_result.json
+.DS_Store
