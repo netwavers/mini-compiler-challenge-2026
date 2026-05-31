@@ -69,6 +69,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Updating leaderboard.json and publishing to GitHub Pages..."
-          # リーダーボード更新とデプロイの処理をキック
+          echo "Updating leaderboard.json..."
           node scripts/update_leaderboard.js
+          
+          echo "Configuring git..."
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          echo "Committing and pushing updated leaderboard..."
+          git add leaderboard.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto-update leaderboard.json [skip ci]"
+            git push origin main
+          else
+            echo "No changes in leaderboard.json"
+          fi

@@ -1,3 +1,4 @@
+// 🐾 たぬきちゃんによる自動ジャッジ本番テスト稼働確認用トリガーコメント（最終デプロイ確認）
 import { Token, ASTNode, TokenType, IdentifierNode } from '../common/types';
 import { TanukiSyntaxError } from '../common/lexer';
 
