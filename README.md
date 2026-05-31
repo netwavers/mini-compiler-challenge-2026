@@ -45,23 +45,67 @@ call_expr     = IDENTIFIER , "(" , [ expr , { "," , expr } ] , ")" ;
 
 ---
 
-## 🚀 開発の始め方 & 防衛型ジャッジ規則
+## 🚀 開発の始め方（爆速3ステップ）
 
-### 1. 環境構築
+### Step 1: テンプレートをローカルにクローン
+本リポジトリをご自身の GitHub アカウントに **Fork** するか、またはローカル環境に直接 **Clone** して取得してください。
 
-当テンプレートを **Fork** または **Clone** し、以下のコマンドで依存関係を解決してください（Bun / Node.js 環境に対応）。
-
-```bash  
-npm install
+```bash
+git clone https://github.com/netwavers/mini-compiler-challenge-2026.git
+cd mini-compiler-challenge-2026
 ```
-*(または `bun install`)*
 
-### 2. 実装ターゲット
+### Step 2: 依存パッケージのインストール
+Node.js (npm) または Bun 環境で以下のコマンドを実行し、TypeScriptおよびJest開発環境を初期化します。
 
-あなたがコードを記述するエリアは `src/generator/parserGen.ts` のみです。  
-運営が提供する共通Lexer（字句解析器）から渡されるトークン列を処理し、指定された ASTNode（JSON）を出力するインターフェースを完成させてください。
+```bash
+# npm (Node.js) の場合
+npm install
 
-### 3. セキュア・ライブジャッジ（提出方法）
+# bun の場合
+bun install
+```
+
+### Step 3: ローカルテストを実行して「Not implemented」の失敗を確認
+開発準備が整っているかを検証するため、以下のコマンドで初期テストを実行します。パーサーは未実装テンプレートであるため、期待通りテストが失敗（Failed）することを確認してください。
+
+```bash
+# npm の場合
+npm run test
+
+# bun の場合
+bun test
+```
+
+---
+
+## 🎯 開発・検証お役立ちコマンド集
+
+### 1. 個別コードをパースしてASTのJSON構造を目視検証する
+実装中のパーサーがどのようなASTツリー（JSON）を出力するかを、ターミナル上で直接確認・デバッグできます。
+
+```bash
+# npm (Node.js) の場合
+npx ts-node src/index.ts <ebnf-file-path> <source-file-path>
+
+# bun の場合
+bun run src/index.ts <ebnf-file-path> <source-file-path>
+```
+
+### 2. TypeScript コンパイル・ビルドの確認
+提出（プッシュ）前に、型エラーやコンパイル不整合が発生していないかを検証できます。
+
+```bash
+# npm の場合
+npm run build
+
+# bun の場合
+bun run build
+```
+
+---
+
+## ⚙️ セキュア・ライブジャッジ（提出方法）
 
 変更を `main` ブランチに **git push** するだけで、裏側の隔離されたプライベート採点環境（Tanuki-Judge）へ安全にペイロードが送信され、自動採点が開始されます。
 
