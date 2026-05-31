@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Mini-Compiler Challenge 2026 - Live Leaderboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&amp;family=Hanken+Grotesk:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #121214;
+            color: #e5e2e3;
+            font-family: 'Hanken Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(77, 71, 50, 0.5);
+        }
+        .glow-gold {
+            box-shadow: 0 0 15px rgba(233, 196, 0, 0.15);
+        }
+        .glow-orange {
+            box-shadow: 0 0 15px rgba(253, 139, 0, 0.15);
+        }
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 246, 223, 0.02);
+            position: absolute;
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        .terminal-cursor::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#313031",
+                        "error-container": "#93000a",
+                        "inverse-primary": "#705d00",
+                        "on-secondary-fixed": "#2f1500",
+                        "surface-dim": "#131314",
+                        "surface-tint": "#e9c400",
+                        "secondary": "#ffb77d",
+                        "deep-charcoal": "#121214",
+                        "outline-variant": "#4d4732",
+                        "secondary-container": "#fd8b00",
+                        "primary-container": "#ffd700",
+                        "inverse-surface": "#e5e2e3",
+                        "surface-container-highest": "#353436",
+                        "tertiary": "#defcff",
+                        "data-gray": "#888888",
+                        "secondary-fixed-dim": "#ffb77d",
+                        "on-secondary": "#4d2600",
+                        "background": "#131314",
+                        "surface-bright": "#3a393a",
+                        "on-error": "#690005",
+                        "glass-surface": "rgba(255, 255, 255, 0.03)",
+                        "on-error-container": "#ffdad6",
+                        "terminal-green": "#00FF41",
+                        "primary-fixed-dim": "#e9c400",
+                        "outline": "#999077",
+                        "on-primary": "#3a3000",
+                        "surface-container-high": "#2a2a2b",
+                        "primary-fixed": "#ffe16d",
+                        "on-primary-fixed-variant": "#544600",
+                        "secondary-fixed": "#ffdcc3",
+                        "tertiary-fixed": "#79f5ff",
+                        "on-tertiary-fixed": "#002022",
+                        "on-surface-variant": "#d0c6ab",
+                        "primary": "#fff6df",
+                        "surface-container-lowest": "#0e0e0f",
+                        "on-tertiary-fixed-variant": "#004f54",
+                        "surface-container": "#201f20",
+                        "on-surface": "#e5e2e3",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "on-secondary-container": "#603100",
+                        "on-primary-container": "#705e00",
+                        "tertiary-container": "#00f1ff",
+                        "on-tertiary-container": "#006a70",
+                        "surface-variant": "#353436",
+                        "error": "#ffb4ab",
+                        "surface-container-low": "#1c1b1c",
+                        "surface": "#131314",
+                        "on-background": "#e5e2e3",
+                        "on-tertiary": "#00363a",
+                        "tertiary-fixed-dim": "#00dbe8",
+                        "on-primary-fixed": "#221b00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "unit": "4px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-xl": ["JetBrains Mono"],
+                        "code-sm": ["JetBrains Mono"],
+                        "headline-lg": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "code-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}]
+                    }
+                },
+            }
+        }
+    </script>
+</head>
+<body class="bg-deep-charcoal">
+
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-deep-charcoal/80 backdrop-blur-md border-b border-outline-variant shadow-[0_0_10px_rgba(255,246,223,0.1)]">
+    <div class="flex justify-between items-center px-margin-desktop py-unit max-w-container-max mx-auto">
+        <div class="font-headline-lg text-headline-lg text-primary tracking-tighter uppercase">Mini-Compiler Challenge 2026</div>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1" href="#">Dashboard</a>
+            <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Submissions</a>
+            <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Docs</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="material-symbols-outlined text-primary p-2 hover:bg-glass-surface rounded transition-all active:scale-95">notifications</button>
+            <button class="material-symbols-outlined text-primary p-2 hover:bg-glass-surface rounded transition-all active:scale-95" onclick="triggerManualReload()">refresh</button>
+        </div>
+    </div>
+</nav>
+
+<div class="flex min-h-screen pt-16">
+    <!-- Sidebar -->
+    <aside class="h-screen w-64 hidden lg:flex flex-col bg-deep-charcoal border-r border-outline-variant fixed">
+        <div class="flex flex-col h-full pt-8 pb-4 px-4">
+            <div class="mb-8 px-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded bg-secondary/20 flex items-center justify-center border border-secondary">
+                        <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">sensors</span>
+                    </div>
+                    <div>
+                        <div class="font-label-caps text-label-caps text-secondary">Compiler Core</div>
+                        <div class="font-code-sm text-code-sm text-on-surface-variant opacity-60">V2.0.26-ALPHA</div>
+                    </div>
+                </div>
+            </div>
+            <nav class="space-y-1 flex-1">
+                <a class="flex items-center gap-3 px-4 py-3 rounded bg-secondary-container text-on-secondary-container font-bold border-l-4 border-secondary transition-all active:translate-x-1" href="#">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+                    <span class="font-label-caps text-label-caps">Global Rank</span>
+                </a>
+            </nav>
+            <div class="mt-auto space-y-4">
+                <div class="border-t border-outline-variant pt-4 space-y-2">
+                    <div class="px-4 py-1 text-on-surface-variant text-[10px] uppercase font-mono">
+                        System Connected
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Canvas -->
+    <main class="flex-1 lg:ml-64 p-margin-mobile md:p-margin-desktop">
+        <header class="mb-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h1 class="font-headline-lg text-headline-lg md:text-headline-xl text-primary tracking-tight uppercase mb-2">Live Leaderboard</h1>
+                    <div class="flex flex-wrap gap-6 font-code-sm text-code-sm text-on-surface-variant">
+                        <div class="flex items-center gap-2">
+                            <span class="text-secondary opacity-70">PERIOD:</span>
+                            <span class="text-on-surface">2026/05/31 〜 終了まで</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-secondary opacity-70">STATUS:</span>
+                            <span id="system-status" class="text-terminal-green terminal-cursor">ACTIVE_NODES</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel px-6 py-4 rounded border-l-4 border-secondary glow-orange">
+                    <div class="font-label-caps text-label-caps text-secondary mb-1">TOTAL SUBMISSIONS</div>
+                    <div id="total-submissions" class="font-headline-lg text-headline-lg text-on-surface font-mono">000,000</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Search & Filter Bar -->
+        <section class="glass-panel p-4 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div class="relative w-full md:w-96">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+                <input id="search-input" class="w-full bg-deep-charcoal border border-outline-variant py-2 pl-10 pr-4 font-code-sm text-code-sm text-on-surface focus:border-secondary outline-none transition-all" placeholder="PARTICIPANT_ID / GITHUB_HANDLE" type="text" oninput="renderTable()"/>
+            </div>
+            <div class="flex w-full md:w-auto gap-4">
+                <select id="sort-select" class="bg-deep-charcoal border border-outline-variant px-4 py-2 font-code-sm text-code-sm text-on-surface focus:border-secondary outline-none appearance-none cursor-pointer pr-10 relative" onchange="renderTable()">
+                    <option value="TOTAL_SCORE">SORT: TOTAL_SCORE</option>
+                    <option value="LLM_ACCURACY">SORT: LLM_ACCURACY</option>
+                    <option value="RECENT_PUSH">SORT: RECENT_PUSH</option>
+                </select>
+                <div class="flex items-center gap-3 bg-glass-surface px-4 py-2 border border-outline-variant select-none">
+                    <span class="font-label-caps text-[10px] text-on-surface-variant">AUTO UPDATE</span>
+                    <div id="auto-update-toggle" class="w-10 h-5 bg-secondary-container rounded-full relative cursor-pointer transition-all" onclick="toggleAutoUpdate()">
+                        <div id="auto-update-dot" class="absolute right-1 top-1 w-3 h-3 bg-white rounded-full transition-all"></div>
+                    </div>
+                    <span id="auto-update-status" class="font-code-sm text-code-sm text-terminal-green">ON</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard Table -->
+        <section class="glass-panel overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr class="border-b border-outline-variant bg-surface-container-low">
+                            <th class="px-6 py-4 font-label-caps text-label-caps text-secondary">Rank</th>
+                            <th class="px-6 py-4 font-label-caps text-label-caps text-secondary">User</th>
+                            <th class="px-6 py-4 font-label-caps text-label-caps text-secondary">Total Score</th>
+                            <th class="px-6 py-4 font-label-caps text-label-caps text-secondary">Trap Progress</th>
+                            <th class="px-6 py-4 font-label-caps text-label-caps text-secondary">LLM Arch Score</th>
+                            <th class="px-6 py-4 font-label-caps text-label-caps text-secondary">Last Push</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body" class="font-code-sm text-code-sm">
+                        <!-- Dynamic content will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Bottom Navigation Mobile -->
+<nav class="fixed bottom-0 w-full lg:hidden z-50 bg-deep-charcoal/90 backdrop-blur-xl border-t border-outline-variant shadow-[0_-4px_12px_rgba(0,0,0,0.5)]">
+    <div class="flex justify-around items-center h-16 px-4">
+        <a class="flex flex-col items-center justify-center text-primary bg-primary-container/20 rounded-xl px-4 py-1 active:scale-90 transition-transform" href="#">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+            <span class="font-label-caps text-[10px]">Rank</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Modal: LLM Review Summary -->
+<div class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4" id="review-modal">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeModal()"></div>
+    <div class="relative glass-panel max-w-2xl w-full rounded border-2 border-primary glow-gold overflow-hidden">
+        <div class="bg-primary/10 border-b border-primary/30 p-4 flex justify-between items-center">
+            <h3 class="font-headline-lg text-headline-lg text-primary uppercase text-xl">LLM_ARCH_REVIEW :: <span id="modal-user">USER</span></h3>
+            <button class="material-symbols-outlined text-primary hover:bg-primary/20 rounded-full p-1" onclick="closeModal()">close</button>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="font-label-caps text-label-caps text-secondary mb-2">CODE ANALYSIS</div>
+                    <div class="bg-black/50 p-4 font-mono text-xs text-terminal-green border border-terminal-green/30 h-64 overflow-auto rounded">
+                        <div class="opacity-50"># Initiating compiler check...</div>
+                        <div id="modal-summary" class="mt-2 text-white">Loading review summary...</div>
+                        <div class="mt-4 animate-pulse">■ STATUS: VERIFIED_SUBMISSION</div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <div>
+                        <div class="font-label-caps text-label-caps text-secondary mb-2">QUALITATIVE SCORES</div>
+                        <div class="space-y-2 font-mono text-xs">
+                            <div class="flex justify-between">
+                                <span>Architecture:</span>
+                                <span id="score-arch" class="text-primary font-bold">0.0/10</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Trap Handling:</span>
+                                <span id="score-trap" class="text-primary font-bold">0.0/10</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Robustness:</span>
+                                <span id="score-robust" class="text-primary font-bold">0.0/10</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-auto border-t border-outline-variant pt-4">
+                        <div class="font-label-caps text-label-caps text-secondary mb-2">OVERALL VERDICT</div>
+                        <div id="modal-verdict" class="text-headline-lg text-headline-lg text-primary font-bold">OPTIMIZED</div>
+                        <p class="text-sm opacity-60">Architecture evaluation completed by AI Judge core.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 bg-glass-surface border-t border-outline-variant flex justify-end">
+            <button class="bg-primary text-on-primary px-6 py-2 font-label-caps text-label-caps font-bold active:scale-95 transition-all" onclick="closeModal()">DISMISS</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="fixed bottom-20 right-4 lg:bottom-10 lg:right-10 z-[70] hidden" id="notification-toast">
+    <div class="bg-black border-t-4 border-secondary px-6 py-4 rounded shadow-2xl glow-orange flex items-center gap-4 max-w-xs transform transition-all translate-x-full duration-500" id="toast-content">
+        <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">error</span>
+        <div class="flex-1">
+            <div class="font-label-caps text-[10px] text-secondary">SYSTEM_LOG</div>
+            <p id="toast-text" class="font-code-sm text-code-sm text-on-surface">Notification: System active.</p>
+        </div>
+        <button class="text-on-surface-variant hover:text-white" onclick="hideToast()"><span class="material-symbols-outlined text-sm">close</span></button>
+    </div>
+</div>
+
+<script>
+    let leaderboardData = [];
+    let lastData = [];
+    let autoUpdateInterval = null;
+    let isAutoUpdateOn = true;
+
+    async function fetchLeaderboard() {
+        try {
+            document.getElementById('system-status').innerText = 'FETCHING_DATA';
+            document.getElementById('system-status').classList.remove('text-terminal-green');
+            document.getElementById('system-status').classList.add('text-secondary');
+
+            const response = await fetch('leaderboard.json?t=' + Date.now());
+            if (!response.ok) throw new Error('Network response not ok');
+            const data = await response.json();
+            
+            leaderboardData = data;
+            
+            // 差分検知（トースト通知）
+            checkDifferences(data);
+            
+            // レンダリング
+            renderTable();
+            updateTotalSubmissions(data);
+
+            document.getElementById('system-status').innerText = 'ACTIVE_NODES';
+            document.getElementById('system-status').classList.remove('text-secondary');
+            document.getElementById('system-status').classList.add('text-terminal-green');
+        } catch (error) {
+            console.error('Error fetching leaderboard:', error);
+            document.getElementById('system-status').innerText = 'OFFLINE';
+            document.getElementById('system-status').classList.remove('text-terminal-green', 'text-secondary');
+            document.getElementById('system-status').classList.add('text-red-500');
+        }
+    }
+
+    function updateTotalSubmissions(data) {
+        // 仮の総提出数として、今回は参加者数をもとにした合計値を表示
+        const submissionSum = data.length * 3 + 1240; // ライブ演出としてのオフセット加算
+        document.getElementById('total-submissions').innerText = String(submissionSum).padStart(6, '0');
+    }
+
+    function checkDifferences(newData) {
+        if (lastData.length === 0) {
+            lastData = newData;
+            return;
+        }
+
+        newData.forEach(newUser => {
+            const oldUser = lastData.find(u => u.github_id === newUser.github_id);
+            if (!oldUser) {
+                showToast(`🚨 NEW CHALLENGER: ${newUser.github_id} joined the race!`);
+                return;
+            }
+
+            const getLevel = (prog) => {
+                if (prog.level3) return 3;
+                if (prog.level2) return 2;
+                if (prog.level1) return 1;
+                return 0;
+            };
+
+            const oldLevel = getLevel(oldUser.trap_progress);
+            const newLevel = getLevel(newUser.trap_progress);
+
+            if (newLevel > oldLevel) {
+                showToast(`🚨 MASSIVE HACK: ${newUser.github_id} passed Level ${newLevel}!`);
+            }
+        });
+
+        lastData = newData;
+    }
+
+    function renderTable() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+        const sortBy = document.getElementById('sort-select').value;
+        const tbody = document.getElementById('leaderboard-body');
+
+        // 検索フィルター
+        let filtered = leaderboardData.filter(user => user.github_id.toLowerCase().includes(query));
+
+        // ソート
+        if (sortBy === 'TOTAL_SCORE') {
+            filtered.sort((a, b) => b.total_score - a.total_score);
+        } else if (sortBy === 'LLM_ACCURACY') {
+            const getLlmTotal = (u) => (u.llm_scores.architecture || 0) + (u.llm_scores.trap_handling || 0) + (u.llm_scores.robustness || 0);
+            filtered.sort((a, b) => getLlmTotal(b) - getLlmTotal(a));
+        } else if (sortBy === 'RECENT_PUSH') {
+            filtered.sort((a, b) => new Date(b.last_push_at) - new Date(a.last_push_at));
+        }
+
+        tbody.innerHTML = '';
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-on-surface-variant opacity-60">NO PARTICIPANTS FOUND IN LEDGER</td></tr>`;
+            return;
+        }
+
+        filtered.forEach((user, index) => {
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-outline-variant hover:bg-glass-surface transition-all cursor-pointer group relative overflow-hidden";
+            
+            // 1位のゴールド背景
+            if (index === 0) {
+                tr.classList.add('bg-primary/5');
+            }
+
+            // 罠進捗ゲージ
+            const p = user.trap_progress;
+            const progressStr = (p.level1 ? '■' : '□') + (p.level2 ? '■' : '□') + (p.level3 ? '■' : '□');
+            let subtext = "BEGINNER";
+            if (p.level3) subtext = "ALL CLEAR!";
+            else if (p.level2) subtext = "Right-assoc Trap";
+            else if (p.level1) subtext = "Level 1 Clear";
+
+            // 最終提出の相対時間
+            const timeStr = getRelativeTime(user.last_push_at);
+
+            // 定性合計スコア
+            const llmTotal = (user.llm_scores.architecture || 0) + (user.llm_scores.trap_handling || 0) + (user.llm_scores.robustness || 0);
+
+            tr.onclick = () => openModal(user);
+
+            tr.innerHTML = `
+                <td class="px-6 py-5">
+                    <div class="flex items-center gap-2">
+                        <span class="text-primary font-bold text-lg">${String(index + 1).padStart(2, '0')}</span>
+                        ${index === 0 ? '<span class="text-yellow-400 text-lg">👑</span>' : ''}
+                    </div>
+                </td>
+                <td class="px-6 py-5">
+                    <div class="flex items-center gap-3">
+                        <img alt="Avatar" class="w-8 h-8 rounded border border-outline-variant" src="${user.avatar_url}" onerror="this.src='https://github.com/identicons/${user.github_id}.png'"/>
+                        <span class="font-bold text-primary hover:underline">${user.github_id}</span>
+                    </div>
+                </td>
+                <td class="px-6 py-5">
+                    <span class="text-primary font-bold text-lg">${user.total_score.toFixed(1)} <span class="text-[10px] opacity-60">PTS</span></span>
+                </td>
+                <td class="px-6 py-5">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex gap-1">
+                            <span class="text-secondary font-bold tracking-wider">${progressStr}</span>
+                        </div>
+                        <span class="text-[10px] text-terminal-green uppercase tracking-tighter">${subtext}</span>
+                    </div>
+                </td>
+                <td class="px-6 py-5 text-on-surface">
+                    ${llmTotal.toFixed(1)}<span class="opacity-40">/30</span>
+                </td>
+                <td class="px-6 py-5 text-on-surface-variant">${timeStr}</td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    function getRelativeTime(isoString) {
+        try {
+            const date = new Date(isoString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} min ago`;
+            
+            const diffHours = Math.floor(diffMins / 60);
+            if (diffHours < 24) return `${diffHours} hr ago`;
+            
+            return date.toLocaleDateString();
+        } catch (e) {
+            return 'Unknown';
+        }
+    }
+
+    function openModal(user) {
+        document.getElementById('modal-user').innerText = user.github_id.toUpperCase();
+        document.getElementById('modal-summary').innerText = user.review_summary;
+        
+        document.getElementById('score-arch').innerText = `${user.llm_scores.architecture.toFixed(1)}/10`;
+        document.getElementById('score-trap').innerText = `${user.llm_scores.trap_handling.toFixed(1)}/10`;
+        document.getElementById('score-robust').innerText = `${user.llm_scores.robustness.toFixed(1)}/10`;
+
+        const totalLlm = user.llm_scores.architecture + user.llm_scores.trap_handling + user.llm_scores.robustness;
+        let verdict = "OPTIMIZED";
+        if (totalLlm < 15) verdict = "COMPILER_WARN";
+        else if (totalLlm < 24) verdict = "VERIFIED";
+
+        document.getElementById('modal-verdict').innerText = verdict;
+
+        document.getElementById('review-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('review-modal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    function showToast(text) {
+        const toast = document.getElementById('notification-toast');
+        const content = document.getElementById('toast-content');
+        document.getElementById('toast-text').innerText = text;
+        
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+            content.classList.remove('translate-x-full');
+        }, 100);
+        
+        setTimeout(() => {
+            hideToast();
+        }, 5000);
+    }
+
+    function hideToast() {
+        const content = document.getElementById('toast-content');
+        content.classList.add('translate-x-full');
+        setTimeout(() => {
+            document.getElementById('notification-toast').classList.add('hidden');
+        }, 500);
+    }
+
+    function toggleAutoUpdate() {
+        isAutoUpdateOn = !isAutoUpdateOn;
+        const dot = document.getElementById('auto-update-dot');
+        const toggle = document.getElementById('auto-update-toggle');
+        const status = document.getElementById('auto-update-status');
+
+        if (isAutoUpdateOn) {
+            dot.style.right = '4px';
+            dot.style.left = 'auto';
+            toggle.classList.remove('bg-surface-variant');
+            toggle.classList.add('bg-secondary-container');
+            status.innerText = 'ON';
+            status.className = 'font-code-sm text-code-sm text-terminal-green';
+            startAutoUpdate();
+        } else {
+            dot.style.left = '4px';
+            dot.style.right = 'auto';
+            toggle.classList.remove('bg-secondary-container');
+            toggle.classList.add('bg-surface-variant');
+            status.innerText = 'OFF';
+            status.className = 'font-code-sm text-code-sm text-on-surface-variant';
+            stopAutoUpdate();
+        }
+    }
+
+    function startAutoUpdate() {
+        stopAutoUpdate();
+        autoUpdateInterval = setInterval(fetchLeaderboard, 5000);
+    }
+
+    function stopAutoUpdate() {
+        if (autoUpdateInterval) {
+            clearInterval(autoUpdateInterval);
+            autoUpdateInterval = null;
+        }
+    }
+
+    function triggerManualReload() {
+        fetchLeaderboard();
+        showToast("Notification: Ledger cache reloaded manually.");
+    }
+
+    // Initial Load
+    fetchLeaderboard();
+    startAutoUpdate();
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+[
+  {
+    "rank": 1,
+    "github_id": "user_alpha",
+    "avatar_url": "https://github.com/user_alpha.png",
+    "total_score": 128.5,
+    "trap_progress": {
+      "level1": true,
+      "level2": true,
+      "level3": true
+    },
+    "llm_scores": {
+      "architecture": 9.0,
+      "trap_handling": 10.0,
+      "robustness": 9.5
+    },
+    "last_push_at": "2026-05-31T16:00:00Z",
+    "review_summary": "EBNFの解析をテーブル駆動型で実装し、右結合のスタック処理を極めてエレガントに自動生成しています。文句なしの最高得点です。"
+  },
+  {
+    "rank": 2,
+    "github_id": "kaze_coder",
+    "avatar_url": "https://github.com/kaze_coder.png",
+    "total_score": 122.0,
+    "trap_progress": {
+      "level1": true,
+      "level2": true,
+      "level3": false
+    },
+    "llm_scores": {
+      "architecture": 8.0,
+      "trap_handling": 9.0,
+      "robustness": 5.0
+    },
+    "last_push_at": "2026-05-31T17:30:00Z",
+    "review_summary": "再帰下降パーサーを用いてべき乗の右結合罠を美しくクリアしています。単項マイナスの優先度が課題です。"
+  },
+  {
+    "rank": 3,
+    "github_id": "tanuki_master",
+    "avatar_url": "https://github.com/tanuki_master.png",
+    "total_score": 105.0,
+    "trap_progress": {
+      "level1": true,
+      "level2": false,
+      "level3": false
+    },
+    "llm_scores": {
+      "architecture": 5.0,
+      "trap_handling": 0.0,
+      "robustness": 0.0
+    },
+    "last_push_at": "2026-05-31T18:10:00Z",
+    "review_summary": "四則演算のパースに成功していますが、べき乗（^）の右結合処理でパースエラーが発生しています。"
+  }
+]
