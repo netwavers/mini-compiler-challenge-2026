@@ -10,8 +10,8 @@
       "level3": true
     },
     "llm_scores": {
-      "architecture": 9.0,
-      "trap_handling": 10.0,
+      "architecture": 9,
+      "trap_handling": 10,
       "robustness": 9.5
     },
     "last_push_at": "2026-05-31T16:00:00Z",
@@ -21,34 +21,52 @@
     "rank": 2,
     "github_id": "kaze_coder",
     "avatar_url": "https://github.com/kaze_coder.png",
-    "total_score": 122.0,
+    "total_score": 122,
     "trap_progress": {
       "level1": true,
       "level2": true,
       "level3": false
     },
     "llm_scores": {
-      "architecture": 8.0,
-      "trap_handling": 9.0,
-      "robustness": 5.0
+      "architecture": 8,
+      "trap_handling": 9,
+      "robustness": 5
     },
     "last_push_at": "2026-05-31T17:30:00Z",
     "review_summary": "再帰下降パーサーを用いてべき乗の右結合罠を美しくクリアしています。単項マイナスの優先度が課題です。"
   },
   {
     "rank": 3,
+    "github_id": "netwavers",
+    "avatar_url": "https://github.com/netwavers.png",
+    "total_score": 122,
+    "trap_progress": {
+      "level1": true,
+      "level2": true,
+      "level3": true
+    },
+    "llm_scores": {
+      "architecture": 3,
+      "trap_handling": 10,
+      "robustness": 9
+    },
+    "last_push_at": "2026-05-31T23:47:14.934Z",
+    "review_summary": "パーサーの実装としては非常に完成度が高く、特に優先順位と結合性の処理、詳細なエラー報告が素晴らしいです。しかし、「パーサージェネレーター」としての役割は果たしておらず、EBNFが実際のパーサロジックに反映されていません。この点が大きな課題です。"
+  },
+  {
+    "rank": 3,
     "github_id": "tanuki_master",
     "avatar_url": "https://github.com/tanuki_master.png",
-    "total_score": 105.0,
+    "total_score": 105,
     "trap_progress": {
       "level1": true,
       "level2": false,
       "level3": false
     },
     "llm_scores": {
-      "architecture": 5.0,
-      "trap_handling": 0.0,
-      "robustness": 0.0
+      "architecture": 5,
+      "trap_handling": 0,
+      "robustness": 0
     },
     "last_push_at": "2026-05-31T18:10:00Z",
     "review_summary": "四則演算のパースに成功していますが、べき乗（^）の右結合処理でパースエラーが発生しています。"
