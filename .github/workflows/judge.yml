@@ -1,0 +1,74 @@
+name: Mini-Compiler Challenge 2026 Auto-Judge
+
+on:
+  push:
+    paths:
+      - 'src/generator/**'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  judge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Time Rate Limit Check (15 mins Gate)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checking rate limit..."
+          # 直近の完了したワークフローの実行日時を取得
+          LAST_RUN_DATE=$(gh run list --workflow="Mini-Compiler Challenge 2026 Auto-Judge" --status=completed --limit=1 --json updatedAt -q ".[0].updatedAt" 2>/dev/null || echo "")
+          if [ -n "$LAST_RUN_DATE" ] && [ "$LAST_RUN_DATE" != "null" ]; then
+            if LAST_RUN_EPOCH=$(date -d "$LAST_RUN_DATE" +%s 2>/dev/null); then
+              CURRENT_EPOCH=$(date +%s)
+              DIFF_MINUTES=$(( (CURRENT_EPOCH - LAST_RUN_EPOCH) / 60 ))
+              echo "Last successful run: $LAST_RUN_DATE"
+              echo "Difference: $DIFF_MINUTES minutes"
+              if [ "$DIFF_MINUTES" -lt 15 ]; then
+                echo "🚨 RATE LIMIT EXCEEDED: Less than 15 minutes since last run. Skipping judge to preserve resources."
+                exit 0
+              fi
+            else
+              echo "⚠️ Failed to parse date: $LAST_RUN_DATE. Proceeding with judge."
+            fi
+          else
+            echo "No previous completed run found. Proceeding with judge."
+          fi
+
+      - name: Run Test Suite (Determinism Gate)
+        run: |
+          echo "Executing deterministic test cases..."
+          npm run test
+
+      - name: Qualitative LLM Code Review (Gemini Gate)
+        if: success()
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: |
+          echo "🎉 All tests passed! Triggering LLM qualitative code review..."
+          node scripts/llm_reviewer.js
+
+      - name: Update Leaderboard and Deploy
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Updating leaderboard.json and publishing to GitHub Pages..."
+          # リーダーボード更新とデプロイの処理をキック
+          node scripts/update_leaderboard.js
